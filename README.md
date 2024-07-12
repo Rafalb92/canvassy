@@ -1,5 +1,7 @@
 # Canvassy
 
+![Canvassy Logo](canvassy.png)
+
 ## Overview
 
 **Canvassy** is a clone of Canva, built using **Next.js** and **Fabric.js**. This application provides a powerful and flexible canvas for creating and editing graphics. The goal of Canvassy is to bring the simplicity and efficiency of Canva to a more developer-friendly and customizable platform.
