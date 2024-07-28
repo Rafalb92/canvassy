@@ -19,15 +19,17 @@ import { CiFileOn } from 'react-icons/ci';
 import { Separator } from '@/components/ui/separator';
 import { Hint } from '@/components/hint';
 import { BsCloudCheck } from 'react-icons/bs';
-import { ActiveTool } from '../types';
+import { ActiveTool, Editor } from '../types';
 import { cn } from '@/lib/utils';
 
 interface NavbarProps {
+  editor: Editor | undefined;
   activeTool: ActiveTool;
   onChangeActiveTool: (tool: ActiveTool) => void;
 }
 
 const EditorNavbar = ({
+  editor,
   activeTool,
   onChangeActiveTool
 }: NavbarProps) => {
@@ -76,18 +78,20 @@ const EditorNavbar = ({
         </Hint>
         <Hint label="Undo" side="bottom" sideOffset={10}>
           <Button
+            disabled={!editor?.canUndo()}
             variant={'ghost'}
             size={'icon'}
-            onClick={() => {}}
+            onClick={() => editor?.onUndo()}
           >
             <Undo2 className="size-4" />
           </Button>
         </Hint>
         <Hint label="Redo" side="bottom" sideOffset={10}>
           <Button
+            disabled={!editor?.canRedo()}
             variant={'ghost'}
             size={'icon'}
-            onClick={() => {}}
+            onClick={() => editor?.onRedo()}
           >
             <Redo2 className="size-4" />
           </Button>

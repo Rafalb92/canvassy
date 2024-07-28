@@ -9,25 +9,50 @@ import {
 } from 'react';
 import { fabric } from 'fabric';
 import { EditorSidebar } from '@/features/editor/components/editor-sidebar';
-import EditorToolbar from '@/features/editor/components/editor-toolbar';
-import EditorFooter from '@/features/editor/components/editor-footer';
+import { EditorToolbar } from '@/features/editor/components/editor-toolbar';
+import { EditorFooter } from '@/features/editor/components/editor-footer';
 import { EditorShapeSidebar } from '@/features/editor/components/editor-shape-sidebar';
-import { ActiveTool } from '../types';
+import {
+  ActiveTool,
+  selectionDependentTools
+} from '@/features/editor/types';
+import { FillColorSidebar } from '@/features/editor/components/fill-color-sidebar';
+import { StrokeColorSidebar } from '@/features/editor/components/stroke-color-sidebar';
+import { StrokeWidthSidebar } from '@/features/editor/components/stroke-width-sidebar';
+import { OpacitySidebar } from '@/features/editor/components/opacity-sidebar';
+import { TextSidebar } from '@/features/editor/components/text-sidebar';
+import { FontSidebar } from '@/features/editor/components/font-sidebar';
+import { ImageSidebar } from '@/features/editor/components/image-sidebar';
+import { FilterSidebar } from '@/features/editor/components/filter-sidebar';
+import { AiSidebar } from '@/features/editor/components/ai-sidebar';
+import { RemoveBgSidebar } from '@/features/editor/components/remove-bg-sidebar';
+import { DrawSidebar } from '@/features/editor/components/draw-sidebar';
+import { SettingsSidebar } from './settings-sidebar';
 
 const Editor = () => {
-  const { init, editor } = useEditor();
   const [activeTool, setActiveTool] =
     useState<ActiveTool>('select');
+
+  const onClearSelection = useCallback(() => {
+    if (selectionDependentTools.includes(activeTool)) {
+      setActiveTool('select');
+    }
+  }, [activeTool]);
+
+  const { init, editor } = useEditor({
+    clearSelectionCallback: onClearSelection
+  });
+
   const onChangeActiveTool = useCallback(
     (tool: ActiveTool) => {
-      if (tool === activeTool) {
-        return setActiveTool('select');
-      }
       if (tool === 'draw') {
-        // TODO enable draw mode
+        editor?.enableDrawingMode();
       }
       if (activeTool === 'draw') {
-        // TODO disable draw mode
+        editor?.disableDrawingMode();
+      }
+      if (tool === activeTool) {
+        return setActiveTool('select');
       }
       setActiveTool(tool);
     },
@@ -58,6 +83,7 @@ const Editor = () => {
   return (
     <div className="h-full flex flex-col">
       <EditorNavbar
+        editor={editor}
         activeTool={activeTool}
         onChangeActiveTool={onChangeActiveTool}
       />
@@ -71,15 +97,82 @@ const Editor = () => {
           activeTool={activeTool}
           onChangeActiveTool={onChangeActiveTool}
         />
+        <FillColorSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <StrokeColorSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <StrokeWidthSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <OpacitySidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <TextSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <FontSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <ImageSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <FilterSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <AiSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <RemoveBgSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <DrawSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
+        <SettingsSidebar
+          editor={editor}
+          activeTool={activeTool}
+          onChangeActiveTool={onChangeActiveTool}
+        />
         <main className="flex-1  bg-muted overflow-auto relative flex flex-col">
-          <EditorToolbar />
+          <EditorToolbar
+            editor={editor}
+            activeTool={activeTool}
+            onChangeActiveTool={onChangeActiveTool}
+            key={JSON.stringify(
+              editor?.canvas.getActiveObject()
+            )}
+          />
           <div
             className="h-[calc(100%-124px)] flex-1 bg-muted"
             ref={containerRef}
           >
             <canvas ref={canvasRef} />
           </div>
-          <EditorFooter />
+          <EditorFooter editor={editor} />
         </main>
       </div>
     </div>
