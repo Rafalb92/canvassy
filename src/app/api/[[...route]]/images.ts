@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-// import { verifyAuth } from "@hono/auth-js";
 
 import { unsplash } from '@/lib/unsplash';
 
